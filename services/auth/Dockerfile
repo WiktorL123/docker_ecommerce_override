@@ -1,12 +1,9 @@
-FROM node:20-slim
-
-RUN apt-get update && \
-    apt-get install -y wget ca-certificates && \
-    wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u2_arm64.deb && \
-    dpkg -i libssl1.1_1.1.1w-0+deb11u2_arm64.deb && \
-    rm libssl1.1_1.1.1w-0+deb11u2_arm64.deb
+FROM node:20-bookworm
 
 WORKDIR /app
+
+# libssl3 jest dostępny w Debian Bookworm (node:20-bookworm)
+RUN apt-get update && apt-get install -y libssl3 ca-certificates && apt-get clean
 
 COPY package*.json ./
 RUN npm install

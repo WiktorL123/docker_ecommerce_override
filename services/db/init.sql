@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS "User" (
   "hashedPassword" TEXT NOT NULL
 );
 
-INSERT INTO "User" (email, "hashedPassword") VALUES ('test@example.com', 'secret123');
+INSERT INTO "User" (email, "hashedPassword") VALUES ('maniek', '$2a$10$LHBfgxKc4AM7p2bl0/Djpeb6Yyq4IBb2MmUEkeCrIIX.NopiPQLt.');
 
 CREATE TABLE IF NOT EXISTS "Order" (
   id SERIAL PRIMARY KEY,

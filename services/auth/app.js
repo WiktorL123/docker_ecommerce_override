@@ -2,6 +2,7 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import fs from 'fs/promises';
 import {PrismaClient} from "@prisma/client";
+import bcrypt from 'bcrypt';
 const app = express();
 const PORT = process.env.PORT || 4000;
 const prisma = new PrismaClient()
@@ -21,19 +22,28 @@ const loadSecret = async () => {
 }
 
 app.post('/login', async (req, res) => {
-    const {email, password} = req.body;
+    const { email, password } = req.body;
+
     try {
-        const user = await prisma.user.findUnique({where: {email}});
-        if (!user || user.hashedPassword !== password){
-            res.status(404).json({message: "User not found"});
+        const user = await prisma.user.findUnique({ where: { email } });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
         }
-        const token = jwt.sign({userId: user.id}, jwtSecret, {expiresIn: '1h'});
-        res.status(200).json({token: token});
+
+        const match = await bcrypt.compare(password, user.hashedPassword);
+        if (!match) {
+            return res.status(401).json({ message: "Invalid password" });
+        }
+
+        const token = jwt.sign({ userId: user.id }, jwtSecret, { expiresIn: '1h' });
+        return res.status(200).json({ token });
+
+    } catch (e) {
+        return res.status(500).json({ error: "Failed to login", message: e.message });
     }
-    catch(e) {
-        res.status(500).json({error:"Failed to login", message: e});
-    }
-})
+});
+
 await loadSecret();
 
 app.listen(PORT, () => {

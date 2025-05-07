@@ -21,7 +21,7 @@ services:
       - jwt_secret
     environment:
       JWT_SECRET_FILE: /run/secrets/jwt_secret
-      DATABASE_URL: postgresql://user:password@db:5432/authdb
+      DATABASE_URL: postgresql://user:supersecretpassword@db:5432/authdb
     networks:
       - frontend_net
       - backend_net
@@ -35,7 +35,7 @@ services:
     secrets:
       - db_password
     environment:
-      DATABASE_URL: postgresql://user:password@db:5432/usersdb
+      DATABASE_URL: postgresql://user:supersecretpassword@db:5432/usersdb
     networks:
       - frontend_net
       - backend_net
@@ -49,12 +49,14 @@ services:
     secrets:
       - db_password
     environment:
-      DATABASE_URL: postgresql://user:password@db:5432/ordersdb
+      DATABASE_URL: postgresql://user:supersecretpassword@db:5432/ordersdb
     networks:
       - backend_net
 
   gateway:
-    build: ../services/gateway
+    build:
+      context: ../services/gateway
+      dockerfile: Dockerfile
     ports:
       - "80:80"
     depends_on:
@@ -70,6 +72,7 @@ services:
       dockerfile: Dockerfile
     environment:
       POSTGRES_USER: user
+      POSTGRES_DB: authdb
       POSTGRES_PASSWORD_FILE: /run/secrets/db_password
     secrets:
       - db_password
@@ -77,4 +80,5 @@ services:
       - db_data:/var/lib/postgresql/data
     networks:
       - backend_net
+
 
