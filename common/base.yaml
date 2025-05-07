@@ -1,5 +1,5 @@
 secrets:
   db_password:
-    file: ./compose/secrets/db_password.txt
+    file: ../secrets/db_password.txt
   jwt_secret:
-    file: ./compose/secrets/jwt_secret.txt
+    file: ../secrets/jwt_secret.txt

@@ -12,40 +12,46 @@ services:
       - backend_net
 
   auth:
-    build: ../services/auth
+    build:
+      context: ../services/auth
+      dockerfile: Dockerfile
     ports:
       - "4001:4000"
     secrets:
       - jwt_secret
     environment:
       JWT_SECRET_FILE: /run/secrets/jwt_secret
+      DATABASE_URL: postgresql://user:password@db:5432/authdb
     networks:
       - frontend_net
       - backend_net
 
   users:
-    build: ../services/users
+    build:
+      context: ../services/users
+      dockerfile: Dockerfile
     ports:
       - "4002:4000"
-    environment:
-      DATABASE_URL: postgresql://user:$(cat /run/secrets/db_password)@db:5432/usersdb
     secrets:
       - db_password
+    environment:
+      DATABASE_URL: postgresql://user:password@db:5432/usersdb
     networks:
       - frontend_net
       - backend_net
 
   orders:
-    build: ../services/orders
+    build:
+      context: ../services/orders
+      dockerfile: Dockerfile
     ports:
       - "4003:4000"
-    environment:
-      DATABASE_URL: postgresql://user:$(cat /run/secrets/db_password)@db:5432/ordersdb
     secrets:
       - db_password
+    environment:
+      DATABASE_URL: postgresql://user:password@db:5432/ordersdb
     networks:
       - backend_net
-
 
   gateway:
     build: ../services/gateway
@@ -57,7 +63,6 @@ services:
       - orders
     networks:
       - frontend_net
-
 
   db:
     image: postgres:15
