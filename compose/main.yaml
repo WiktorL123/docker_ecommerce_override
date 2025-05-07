@@ -65,8 +65,9 @@ services:
       - frontend_net
 
   db:
-    image: postgres:15
-    restart: always
+    build:
+      context: ../services/db
+      dockerfile: Dockerfile
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD_FILE: /run/secrets/db_password
@@ -76,3 +77,4 @@ services:
       - db_data:/var/lib/postgresql/data
     networks:
       - backend_net
+
