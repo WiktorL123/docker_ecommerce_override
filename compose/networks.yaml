@@ -1,0 +1,6 @@
+networks:
+  frontend_net:
+  backend_net:
+
+volumes:
+  db_data:
