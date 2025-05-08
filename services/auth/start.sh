@@ -1,5 +1,4 @@
 #!/bin/sh
-
 echo "🟡 Czekam na bazę danych..."
 sleep 5
 
