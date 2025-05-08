@@ -1,4 +1,15 @@
-#FROM alpine:3.18
-#CMD ["echo", "🧪 users działa!"]
-FROM alpine
-CMD ["sleep", "9999"]
+FROM node:20-slim
+
+WORKDIR /app
+
+# Instalacja tylko potrzebnych bibliotek
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+CMD ["node", "app.js"]

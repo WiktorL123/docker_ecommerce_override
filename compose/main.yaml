@@ -35,7 +35,7 @@ services:
     secrets:
       - db_password
     environment:
-      DATABASE_URL: postgresql://user:supersecretpassword@db:5432/usersdb
+      DATABASE_URL: postgresql://user:supersecretpassword@db:5432/authdb
     networks:
       - frontend_net
       - backend_net
@@ -44,12 +44,14 @@ services:
     build:
       context: ../services/orders
       dockerfile: Dockerfile
+    depends_on:
+      - db
     ports:
       - "4003:4000"
     secrets:
       - db_password
     environment:
-      DATABASE_URL: postgresql://user:supersecretpassword@db:5432/ordersdb
+      DATABASE_URL: postgresql://user:supersecretpassword@db:5432/authdb
     networks:
       - backend_net
 

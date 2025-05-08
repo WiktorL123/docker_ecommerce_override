@@ -46,6 +46,20 @@ app.post('/login', async (req, res) => {
 
 await loadSecret();
 
+app.post('/verify', async (req, res) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) return res.status(401).json({ valid: false, message: 'Brak tokena' });
+
+    const token = authHeader.split(' ')[1]; // oczekujemy 'Bearer <token>'
+    try {
+        const payload = jwt.verify(token, jwtSecret);
+        res.status(200).json({ valid: true, userId: payload.userId });
+    } catch (err) {
+        res.status(401).json({ valid: false, message: 'Nieprawidłowy token' });
+    }
+});
+
+
 app.listen(PORT, () => {
     console.log(`auth api started on port ${PORT}`);
 })

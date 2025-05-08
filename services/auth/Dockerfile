@@ -1,9 +1,12 @@
-FROM node:20-bookworm
+FROM node:20-slim
 
 WORKDIR /app
 
-# libssl3 jest dostępny w Debian Bookworm (node:20-bookworm)
-RUN apt-get update && apt-get install -y libssl3 ca-certificates && apt-get clean
+# Zainstaluj minimalne biblioteki systemowe wymagane przez Prisma
+RUN apt-get update && apt-get install -y \
+    libssl3 \
+    ca-certificates \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./
 RUN npm install
