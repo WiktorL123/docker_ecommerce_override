@@ -2,7 +2,7 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import fs from 'fs/promises';
 import {PrismaClient} from "@prisma/client";
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 const app = express();
 const PORT = process.env.PORT || 4000;
 const prisma = new PrismaClient()

@@ -42,10 +42,11 @@ services:
 
   orders:
     build:
-      context: ../services/orders
-      dockerfile: Dockerfile
+      context: ../
+      dockerfile: services/orders/Dockerfile
     depends_on:
       - db
+      - auth
     ports:
       - "4003:4000"
     secrets:

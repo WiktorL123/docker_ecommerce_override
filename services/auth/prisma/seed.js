@@ -1,26 +1,28 @@
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcrypt';
-
+import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-    const hash = await bcrypt.hash('supersekretnehaslo', 10);
-    await prisma.user.upsert({
-        where: { email: 'maniek@example.com' },
-        update: {},
-        create: {
+    const hash = await bcrypt.hash('haslo123', 10);
+    const user = await prisma.user.create({
+        data: {
             email: 'maniek@example.com',
-            hashedPassword: hash
+            hashedPassword: hash,
+            orders: {
+                create: [
+                    { product: 'Banany', quantity: 2 },
+                    { product: 'Jabłka', quantity: 5 }
+                ]
+            }
         }
     });
+    console.log('Seed complete:', user);
 }
 
 main()
-    .then(() => {
-        console.log(' Seed complete');
-        return prisma.$disconnect();
-    })
-    .catch(e => {
-        console.error(' Seed failed', e);
-        return prisma.$disconnect();
+    .then(() => prisma.$disconnect())
+    .catch(err => {
+        console.error(err);
+        prisma.$disconnect();
+        process.exit(1);
     });

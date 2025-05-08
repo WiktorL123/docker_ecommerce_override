@@ -1,10 +1,10 @@
 #!/bin/sh
 
-echo " Czekam na bazę danych..."
+echo "🟡 Czekam na bazę danych..."
 sleep 5
 
-echo " Migracja..."
-npx prisma migrate deploy
+echo "🔁 Migracja i generowanie klienta Prisma..."
+npx prisma migrate dev --name init && npm run seed
 
-echo " Start aplikacji..."
+echo "✅ Start aplikacji"
 node app.js

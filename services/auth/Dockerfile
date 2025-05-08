@@ -1,12 +1,8 @@
-FROM node:20-slim
+FROM node:20-bookworm
 
 WORKDIR /app
 
-# Zainstaluj minimalne biblioteki systemowe wymagane przez Prisma
-RUN apt-get update && apt-get install -y \
-    libssl3 \
-    ca-certificates \
- && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y libssl3 ca-certificates && apt-get clean
 
 COPY package*.json ./
 RUN npm install
@@ -15,4 +11,7 @@ COPY . .
 
 RUN npx prisma generate
 
-CMD ["node", "app.js"]
+COPY start.sh ./
+RUN chmod +x start.sh
+
+CMD ["./start.sh"]
