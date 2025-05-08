@@ -66,8 +66,10 @@ services:
       - auth
       - users
       - orders
+      - db
     networks:
       - frontend_net
+      - backend_net
 
   db:
     build:
