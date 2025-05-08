@@ -30,7 +30,7 @@ export const authMiddleware = async (req, res, next) => {
             return res.status(401).json({ message: 'Token nieprawidłowy' });
         }
 
-        req.userId = data.userId; // przyda się np. do autoryzacji
+        req.userId = data.userId;
         next();
     } catch (err) {
         res.status(500).json({ error: 'Błąd autoryzacji', message: err.message });
@@ -52,7 +52,7 @@ app.get('/', async (req, res) => {
 
 
 });
-app.post('/', async (req, res) => {
+app.post('/register', async (req, res) => {
     const { email, password } = req.body;
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
