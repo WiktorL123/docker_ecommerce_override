@@ -1,19 +1,15 @@
 import express from 'express';
-import pkg from 'pg';
+import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
-
-const { Pool } = pkg;
-
-
-const app = express();
-const PORT = process.env.PORT || 4000;
-app.use(express.json());
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL
-});
-
 import fetch from 'node-fetch';
 
+const prisma = new PrismaClient();
+const app = express();
+const PORT = process.env.PORT || 4000;
+
+app.use(express.json());
+
+// --- Middleware do weryfikacji tokena ---
 export const authMiddleware = async (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (!authHeader) return res.status(401).json({ message: 'Brak tokena' });
@@ -37,90 +33,80 @@ export const authMiddleware = async (req, res, next) => {
     }
 };
 
+// --- Endpointy ---
 
+// Pobierz wszystkich użytkowników
 app.get('/', async (req, res) => {
-    try{
-        const result = await pool.query('SELECT * FROM "User"');
-        if (result.rows.length === 0){
-            return res.status(404).json({message: 'no user found'})
+    try {
+        const users = await prisma.user.findMany();
+        if (users.length === 0) {
+            return res.status(404).json({ message: 'no user found' });
         }
-        res.status(200).json(result.rows)
-
-    }catch(err){
-        res.status(500).json({error:"server error", message:err.message});
+        res.status(200).json(users);
+    } catch (err) {
+        res.status(500).json({ error: 'server error', message: err.message });
     }
-
-
 });
+
+// Rejestracja nowego użytkownika
 app.post('/register', async (req, res) => {
     const { email, password } = req.body;
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        const result = await pool.query(
-            'INSERT INTO "User" (email, "hashedPassword") VALUES ($1, $2) RETURNING *',
-            [email, hashedPassword]
-        );
-        res.status(201).json({ message: 'User registered', user: result.rows[0] });
+        const user = await prisma.user.create({
+            data: { email, hashedPassword }
+        });
+        res.status(201).json({ message: 'User registered', user });
     } catch (err) {
         res.status(500).json({ error: 'Registration failed', message: err.message });
     }
 });
 
+// Usuwanie użytkownika
 app.delete('/:id', authMiddleware, async (req, res) => {
     const userId = parseInt(req.params.id);
     try {
-        const result = await pool.query(
-            'DELETE FROM "User" WHERE id = $1 RETURNING *',
-            [userId]
-        );
-        if (result.rowCount === 0) {
+        const user = await prisma.user.delete({
+            where: { id: userId }
+        });
+        res.status(200).json({ message: 'User deleted', user });
+    } catch (err) {
+        if (err.code === 'P2025') {
             return res.status(404).json({ message: 'User not found' });
         }
-        res.status(200).json({ message: 'User deleted', user: result.rows[0] });
-    } catch (err) {
         res.status(500).json({ error: 'Deletion failed', message: err.message });
     }
 });
+
+// Edycja użytkownika
 app.put('/:id', authMiddleware, async (req, res) => {
     const userId = parseInt(req.params.id);
     const { email, password } = req.body;
 
     try {
-        let query = 'UPDATE "User" SET ';
-        const values = [];
-        let index = 1;
+        const updates = {};
+        if (email) updates.email = email;
+        if (password) updates.hashedPassword = await bcrypt.hash(password, 10);
 
-        if (email) {
-            query += `"email" = $${index++}, `;
-            values.push(email);
-        }
-
-        if (password) {
-            const hashedPassword = await bcrypt.hash(password, 10);
-            query += `"hashedPassword" = $${index++}, `;
-            values.push(hashedPassword);
-        }
-
-        if (values.length === 0) {
+        if (Object.keys(updates).length === 0) {
             return res.status(400).json({ message: 'Nothing to update' });
         }
 
-        query = query.slice(0, -2) + ` WHERE id = $${index} RETURNING *`;
-        values.push(userId);
+        const user = await prisma.user.update({
+            where: { id: userId },
+            data: updates
+        });
 
-        const result = await pool.query(query, values);
-
-        if (result.rowCount === 0) {
+        res.status(200).json({ message: 'User updated', user });
+    } catch (err) {
+        if (err.code === 'P2025') {
             return res.status(404).json({ message: 'User not found' });
         }
-
-        res.status(200).json({ message: 'User updated', user: result.rows[0] });
-
-    } catch (err) {
         res.status(500).json({ error: 'Update failed', message: err.message });
     }
 });
+
 app.listen(PORT, () => {
-    console.log(`🧠 Users service running on port ${PORT}`);
-    console.log(process.env.DATABASE_URL)
+    console.log(` Users service running on port ${PORT}`);
+    console.log(process.env.DATABASE_URL);
 });

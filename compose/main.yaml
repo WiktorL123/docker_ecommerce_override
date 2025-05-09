@@ -28,8 +28,8 @@ services:
 
   users:
     build:
-      context: ../services/users
-      dockerfile: Dockerfile
+      context: ../
+      dockerfile: services/users/Dockerfile
     ports:
       - "4002:4000"
     secrets:
