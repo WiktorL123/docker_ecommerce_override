@@ -78,5 +78,5 @@ app.put('/:id', async (req, res) => {
 })
 
 app.listen(4000, () => {
-    console.log(' Orders service running on port 4000');
+    console.log('Orders service running on port 4000');
 });

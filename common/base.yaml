@@ -1,5 +1,1 @@
-secrets:
-  db_password:
-    file: ../secrets/db_password.txt
-  jwt_secret:
-    file: ../secrets/jwt_secret.txt
+name: docker-ecommerce-override

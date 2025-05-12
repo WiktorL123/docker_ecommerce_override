@@ -1,2 +1,5 @@
 /services/auth/node_modules
 .DS_Store
+/tests/node_modules
+/services/orders/node_modules
+/services/users/node_modules

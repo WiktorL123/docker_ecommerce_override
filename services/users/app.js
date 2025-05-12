@@ -105,7 +105,7 @@ app.put('/:id', authMiddleware, async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(` Users service running on port ${PORT}`);
+    console.log(`Users service running on port ${PORT}`);
     console.log(process.env.DATABASE_URL);
     console.log(process.env.NODE_ENV);
 });
