@@ -9,7 +9,6 @@ const PORT = process.env.PORT || 4000;
 
 app.use(express.json());
 
-// --- Middleware do weryfikacji tokena ---
 export const authMiddleware = async (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (!authHeader) return res.status(401).json({ message: 'Brak tokena' });
@@ -33,9 +32,7 @@ export const authMiddleware = async (req, res, next) => {
     }
 };
 
-// --- Endpointy ---
 
-// Pobierz wszystkich użytkowników
 app.get('/', async (req, res) => {
     try {
         const users = await prisma.user.findMany();

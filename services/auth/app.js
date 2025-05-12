@@ -50,7 +50,7 @@ app.post('/verify', async (req, res) => {
     const authHeader = req.headers.authorization;
     if (!authHeader) return res.status(401).json({ valid: false, message: 'Brak tokena' });
 
-    const token = authHeader.split(' ')[1]; // oczekujemy 'Bearer <token>'
+    const token = authHeader.split(' ')[1];
     try {
         const payload = jwt.verify(token, jwtSecret);
         res.status(200).json({ valid: true, userId: payload.userId });
