@@ -1,0 +1,27 @@
+services:
+  auth:
+    volumes:
+      - ../services/auth:/app
+      - /app/node_modules
+    command: npm run dev
+    environment:
+      - NODE_ENV=development
+  users:
+    volumes:
+      - ../services/users:/app
+      - /app/node_modules
+    command: npx nodemon app.js
+    environment:
+      - NODE_ENV=development
+  orders:
+    volumes:
+      - ../services/orders:/app
+      - /app/node_modules
+    command: npx nodemon app.js
+    environment:
+      - NODE_ENV=development
+  gateway:
+    volumes:
+      - ../services/gateway:/etc/nginx
+    environment:
+      - NODE_ENV=development

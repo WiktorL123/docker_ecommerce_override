@@ -4,9 +4,9 @@
   "type": "module",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "sh ./start.sh",
     "seed": "node prisma/seed.js",
-    "dev": "nodemon app.js"
+    "dev": "sh ./start-dev.sh"
   },
   "dependencies": {
     "@prisma/client": "^6.7.0",

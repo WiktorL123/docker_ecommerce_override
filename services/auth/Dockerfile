@@ -15,5 +15,6 @@ RUN npx prisma generate
 
 COPY start.sh ./
 RUN chmod +x start.sh
+RUN chmod +x start-dev.sh
 
 CMD ["./start.sh"]

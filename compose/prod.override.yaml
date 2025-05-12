@@ -1,0 +1,13 @@
+services:
+  auth:
+    environment:
+      NODE_ENV: production
+  users:
+    environment:
+      NODE_ENV: production
+  orders:
+    environment:
+      NODE_ENV: production
+  gateway:
+    environment:
+      NODE_ENV: production

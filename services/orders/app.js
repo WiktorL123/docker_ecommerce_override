@@ -12,6 +12,7 @@ app.get('/', async (req, res) => {
         if (orders.length === 0) {
             return   res.status(404).json({ message: "No orders found" });
         }
+        console.log(orders, req.body);
         return  res.status(200).json({ orders });
     }
     catch (error) {

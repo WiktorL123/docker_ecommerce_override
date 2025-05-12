@@ -1,5 +1,5 @@
 #!/bin/sh
-echo "start prod"
+echo "start-dev ...."
 echo "🟡 Czekam na bazę danych..."
 sleep 5
 

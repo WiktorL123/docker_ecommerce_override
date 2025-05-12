@@ -53,6 +53,7 @@ app.post('/register', async (req, res) => {
         const user = await prisma.user.create({
             data: { email, hashedPassword }
         });
+        console.log(req.body);
         res.status(201).json({ message: 'User registered', user });
     } catch (err) {
         res.status(500).json({ error: 'Registration failed', message: err.message });
@@ -106,4 +107,5 @@ app.put('/:id', authMiddleware, async (req, res) => {
 app.listen(PORT, () => {
     console.log(` Users service running on port ${PORT}`);
     console.log(process.env.DATABASE_URL);
+    console.log(process.env.NODE_ENV);
 });
