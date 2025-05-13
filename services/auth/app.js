@@ -3,9 +3,11 @@ import jwt from 'jsonwebtoken';
 import fs from 'fs/promises';
 import {PrismaClient} from "@prisma/client";
 import bcrypt from 'bcryptjs';
+import cors from "cors"
 const app = express();
 const PORT = process.env.PORT || 4000;
 const prisma = new PrismaClient()
+app.use(cors())
 app.use(express.json());
 
 let jwtSecret;

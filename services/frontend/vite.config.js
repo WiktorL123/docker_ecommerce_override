@@ -10,6 +10,15 @@ export default defineConfig({
     watch: {
       usePolling: true,
       interval: 100
+    },
+    proxy: {
+      '/api': {
+        target: 'http://compose-gateway-1', // użyj nazwy kontenera gateway
+        changeOrigin: true,
+        secure: false,
+        rewrite: path => path
+      }
     }
+
   }
 })

@@ -1,10 +1,11 @@
 import './index.css'
+import AppRoutes from "./routes/AppRoutes.jsx";
 
 export default function App() {
 
   return (
     <>
-        <div><h1 className={'text-lg'}>siemaadadaa</h1></div>
+        <div><AppRoutes/></div>
     </>
   )
 }
