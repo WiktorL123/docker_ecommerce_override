@@ -28,6 +28,8 @@ docker_ecommerce_override/
 │   ├── dev.override.yaml
 │   ├── prod.override.yaml
 │   ├── networks.yaml
+├── common/
+│   └── base.yaml             # base configuration shared between setups - in this case name of stack
 ├── services/
 │   ├── gateway/        # Nginx reverse proxy
 │   ├── auth/           # Login, JWT generation
@@ -36,7 +38,6 @@ docker_ecommerce_override/
 │   ├── db/             # PostgreSQL database
 │   └── frontend/       # React (Vite) frontend
 ├── secrets/            # JWT and DB secret files
-├── common/             # base.yaml for shared config
 ├── tests/              # e2e tests with TestContainers
 └── README.md           # Project documentation
 ```
@@ -48,9 +49,9 @@ docker_ecommerce_override/
 * Login and registration pages
 * Admin panel with tabs:
 
-    * **Dashboard** (default)
-    * **Users** (CRUD for users)
-    * **Orders** (CRUD for orders)
+  * **Dashboard** (default)
+  * **Users** (CRUD for users)
+  * **Orders** (CRUD for orders)
 * Forms handled with React Hook Form
 * The frontend is a completely original creative addition by the author and an optional enhancement to the project. All API functionality can be freely tested using Postman or a browser without relying on the frontend.
 * During development, the frontend is maintained in a separate container due to testing issues. In production, it is intended to be served as a static build within the Nginx container.
