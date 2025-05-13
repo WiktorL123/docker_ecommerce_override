@@ -1,15 +1,15 @@
 services:
-  frontend:
-    build: ../services/gateway
-    ports:
-      - "3000:3000"
-    depends_on:
-      - auth
-      - users
-      - orders
-    networks:
-      - frontend_net
-      - backend_net
+#  frontend:
+#    build: ../services/gateway
+#    ports:
+#      - "3000:3000"
+#    depends_on:
+#      - auth
+#      - users
+#      - orders
+#    networks:
+#      - frontend_net
+#      - backend_net
 
   auth:
     build:

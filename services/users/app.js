@@ -45,7 +45,6 @@ app.get('/', async (req, res) => {
     }
 });
 
-// Rejestracja nowego użytkownika
 app.post('/register', async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -60,7 +59,6 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// Usuwanie użytkownika
 app.delete('/:id', authMiddleware, async (req, res) => {
     const userId = parseInt(req.params.id);
     try {
@@ -76,7 +74,6 @@ app.delete('/:id', authMiddleware, async (req, res) => {
     }
 });
 
-// Edycja użytkownika
 app.put('/:id', authMiddleware, async (req, res) => {
     const userId = parseInt(req.params.id);
     const { email, password } = req.body;

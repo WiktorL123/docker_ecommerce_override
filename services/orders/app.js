@@ -44,38 +44,51 @@ app.post('/', async (req, res) => {
 
 
 
-app.delete('/:id', async (req, res) => {
-    const id = parseInt(req.params.id)
-    try {
-        const order = await prisma.order.delete({
-            where: {id: id}
-            })
-       return  res.status(200).json(order);
-    }
-    catch (error) {
-       return  res.status(500).json({error: "server error", message: error.message});
-    }
-})
 
-app.put('/:id', async (req, res) => {
-    const {product, quantity} = req.body;
+app.delete('/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     try {
-        const updates = {}
+        const order = await prisma.order.delete({
+            where: { id }
+        });
+        return res.status(200).json(order);
+    } catch (error) {
+        if (error.code === 'P2025') {
+            return res.status(404).json({ message: "not found" });
+        }
+        return res.status(500).json({ error: "server error", message: error.message });
+    }
+});
+
+
+app.put('/:id', async (req, res) => {
+    const { product, quantity } = req.body;
+    const id = parseInt(req.params.id);
+
+    try {
+        const updates = {};
         if (product) updates.product = product;
         if (quantity) updates.quantity = quantity;
-        if (Object.keys(updates).length === 0) res.status(400).json({message: "Nothing to update"})
-        const order = await prisma.order.update({
-            where: {id: id},
-            data: updates
-        })
-        return  res.status(200).json(order);
 
+        if (Object.keys(updates).length === 0) {
+            return res.status(400).json({ message: "Nothing to update" });
+        }
+
+        const order = await prisma.order.update({
+            where: { id },
+            data: updates
+        });
+
+        return res.status(200).json(order);
+
+    } catch (error) {
+        if (error?.code === 'P2025') {
+            return res.status(404).json({ message: "not found" });
+        }
+        return res.status(500).json({ error: "server error", message: error.message });
     }
-    catch (error) {
-        return res.status(500).json({error: "server error", message: error.message});
-    }
-})
+});
+
 
 app.listen(4000, () => {
     console.log('Orders service running on port 4000');
