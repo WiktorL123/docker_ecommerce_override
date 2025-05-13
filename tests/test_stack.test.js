@@ -138,14 +138,22 @@ describe("Docker Compose – register, login, GET users & orders", () => {
     //----------orders-----------
 
     test("POST /order successfully", async () => {
-        const res = await axios.post("http://localhost:4003/", orderData);
+        const res = await axios.post("http://localhost:4003/", orderData, {
+            headers:{
+                Authorization: `Bearer ${token}`
+            }
+        });
         expect(res.status).toBe(201);
 
     })
 
     test("GET /orders – public access", async () => {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const res = await axios.get("http://localhost:4003/")
+        const res = await axios.get("http://localhost:4003/", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        } )
             .catch(err => err.response);
         console.log("ORDERS TEST:", res.status, res.data);
         expect(res.status).toBe(200);
@@ -153,30 +161,49 @@ describe("Docker Compose – register, login, GET users & orders", () => {
     });
 
     test("POST /orders invalid data", async () => {
-        const res = await axios.post("http://localhost:4003/", invalidOrderData)
+        const res = await axios.post("http://localhost:4003/", invalidOrderData, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
         .catch(err => err.response);
         expect(res.status).toBe(400);
         expect(res.data.message).toBe('invalid data');
     })
     test("PUT /orders succesfull", async () => {
-        const res = await axios.put("http://localhost:4003/3", updatedOrderData);
+        const res = await axios.put("http://localhost:4003/3", updatedOrderData, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         expect(res.status).toBe(200);
     })
     test("PUT /orders 404 ", async () => {
-        const res = await axios.put("http://localhost:4003/99", updatedOrderData)
+        const res = await axios.put("http://localhost:4003/99", updatedOrderData, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             .catch(err => err.response);
         expect(res.status).toBe(404);
     })
 
     test('DELETE /orders successfully', async () => {
-        const res = await axios.delete("http://localhost:4003/3");
+        const res = await axios.delete("http://localhost:4003/3", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         expect(res.status).toBe(200);
         expect(res.data.id).toBe(3);
     });
 
     test('DELETE /orders 404', async () => {
-        const res = await axios
-            .delete("http://localhost:4003/3")
+        const res = await axios.delete("http://localhost:4003/3", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             .catch(err => {
                 console.error("DELETE 404 ERROR:", err.toJSON?.() || err.message || err);
                 return err.response;

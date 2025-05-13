@@ -1,12 +1,36 @@
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
-
 const app = express();
 const prisma = new PrismaClient();
 
 app.use(express.json());
 
-app.get('/', async (req, res) => {
+
+
+export const authMiddleware = async (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) return res.status(401).json({ message: 'Brak tokena' });
+
+    try {
+        const response = await fetch('http://auth:4000/verify', {
+            method: 'POST',
+            headers: { Authorization: authHeader }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.valid) {
+            return res.status(401).json({ message: 'Token nieprawidłowy' });
+        }
+
+        req.userId = data.userId;
+        next();
+    } catch (err) {
+        res.status(500).json({ error: 'Błąd autoryzacji', message: err.message });
+    }
+};
+
+app.get('/', authMiddleware, async (req, res) => {
     try {
         const orders = await prisma.order.findMany()
         if (orders.length === 0) {
@@ -20,7 +44,7 @@ app.get('/', async (req, res) => {
     }
 });
 
-app.post('/', async (req, res) => {
+app.post('/', authMiddleware, async (req, res) => {
     const { product, quantity, userId } = req.body;
 
     try {
@@ -45,7 +69,7 @@ app.post('/', async (req, res) => {
 
 
 
-app.delete('/:id', async (req, res) => {
+app.delete('/:id', authMiddleware, async (req, res) => {
     const id = parseInt(req.params.id);
     try {
         const order = await prisma.order.delete({
@@ -61,7 +85,7 @@ app.delete('/:id', async (req, res) => {
 });
 
 
-app.put('/:id', async (req, res) => {
+app.put('/:id', authMiddleware, async (req, res) => {
     const { product, quantity } = req.body;
     const id = parseInt(req.params.id);
 
