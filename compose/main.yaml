@@ -70,6 +70,10 @@ services:
     networks:
       - frontend_net
       - backend_net
+    volumes:
+      - type: bind
+        source: ../services/gateway/conf/nginx.conf
+        target: /etc/nginx/nginx.conf
 
   db:
     build:
