@@ -2,6 +2,7 @@ import * as Yup from 'yup'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useState } from 'react'
+import {useNavigate } from 'react-router-dom'
 
 const schema = Yup.object().shape({
     email: Yup.string().required('Email is required').min(3, 'min 3 length').max(20, 'max 20 length'),
@@ -12,6 +13,9 @@ export default function RegisterForm() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const [successMessage, setSuccessMessage] = useState('')
+    const navigate = useNavigate()
+
+
 
     const {
         register,
@@ -21,7 +25,7 @@ export default function RegisterForm() {
     } = useForm({
         defaultValues: { email: '', password: '' },
         resolver: yupResolver(schema),
-        mode: 'onBlur'
+        mode: 'all'
     })
 
     const handleSubmitRegister = async (formData) => {
@@ -45,6 +49,7 @@ export default function RegisterForm() {
             const result = await res.json()
             setSuccessMessage(result.message || 'Registration successful!')
             reset()
+            setTimeout(() =>navigate('/login'))
         } catch (error) {
             setError(error.message)
         } finally {
