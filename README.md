@@ -75,7 +75,7 @@ docker_ecommerce_override/
 From the project root directory:
 
 ```bash
-docker compose -f compose/main.yaml -f compose/networks.yaml -f compose/dev.override.yaml up --build
+docker compose -f common/base.yaml -f compose/main.yaml -f compose/networks.yaml -f compose/dev.override.yaml up --build
 ```
 
 Frontend launched separately:
@@ -83,7 +83,7 @@ Frontend launched separately:
 ```bash
 docker run -d \
   --name frontend \
-  --network compose_frontend_net \
+  --network docker-ecommerce-override_frontend_net \
   -p 5173:5173 \
   -v "$PWD/services/frontend":/app \
   -v /app/node_modules \
