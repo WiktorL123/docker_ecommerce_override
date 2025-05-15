@@ -9,7 +9,7 @@ export default function Login() {
             <div className='w-full max-w-md bg-white m-6 rounded shadow'>
                 <h1 className=' text-2l font-bold text-center mb-4'>LOGIN PAGE</h1>
                 <LoginForm/>
-                <button onClick={navigation('/register')} className='text-center'>nie masz konta? zarejestruj sie</button>
+                <button onClick={()=>navigation('/register')} className='text-center'>nie masz konta? zarejestruj sie</button>
             </div>
         </div>
     )
