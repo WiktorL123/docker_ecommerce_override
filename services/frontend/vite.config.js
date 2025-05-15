@@ -13,7 +13,7 @@ export default defineConfig({
     },
     proxy: {
       '/api': {
-        target: 'http://gateway', 
+        target: 'http://gateway',
         changeOrigin: true,
         secure: false,
         rewrite: path => path
