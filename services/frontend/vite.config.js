@@ -13,7 +13,7 @@ export default defineConfig({
     },
     proxy: {
       '/api': {
-        target: 'http://compose-gateway-1', // użyj nazwy kontenera gateway
+        target: 'http://gateway', 
         changeOrigin: true,
         secure: false,
         rewrite: path => path
