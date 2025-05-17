@@ -5,6 +5,7 @@ import Dashboard from "../pages/Admin/Dashboard.jsx";
 import Users from "../pages/Admin/Users.jsx";
 import Orders from "../pages/Admin/Orders.jsx";
 import PrivateRoute from "../components/PrivateRoute.jsx";
+import PageNotFound from "../pages/404.jsx";
 
 export default function AppRoutes(){
     return (
@@ -15,7 +16,7 @@ export default function AppRoutes(){
             <Route path='/admin' element={<PrivateRoute><Dashboard/></PrivateRoute>}/>
             <Route path='/admin/users' element={<PrivateRoute><Users /></PrivateRoute>}/>
             <Route path='/admin/orders' element={<PrivateRoute><Orders/></PrivateRoute>}/>
-            <Route path='*' element={<div>404</div>}/>
+            <Route path='*' element={<PageNotFound/>}/>
         </Routes>
     )
 }

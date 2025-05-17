@@ -11,6 +11,8 @@ export default function Dashboard() {
         setEmail(localStorage.getItem('email') ?? '')
     }, [])
 
+    const sites = [{id:1, name: 'orders'}, {id:2, name: 'users'}]
+
     const handleLogout = () => {
         localStorage.removeItem('token')
         localStorage.removeItem('email')
@@ -18,10 +20,35 @@ export default function Dashboard() {
 
     }
     return (
+<>
+        <div className="flex justify-between items-center mx-6 py-4">
+            <h1 className="text-lg font-semibold">
+                Dashboard PAGE - {email ? email : 'not logged in'}
+            </h1>
 
-        <>
-            <h1>Dashboard PAGE - {email ? email : 'not logged in'} </h1>
-            <button onClick={handleLogout}>{token ? 'wyloguj' : 'zaloguj sie'}</button>
-        </>
+            <button
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                onClick={handleLogout}
+            >
+                {token ? 'Wyloguj się' : 'Zaloguj się'}
+            </button>
+
+
+        </div>
+    <div className="flex justify-center w-full">
+        <div className="flex flex-wrap justify-center gap-6 w-full max-w-4xl p-4">
+            {sites.map((site) => (
+                <div
+                    key={site.id}
+                    onClick={() => navigate(`/admin/${site.name}`)}
+                    className="cursor-pointer border border-gray-300 rounded p-6 text-center shadow hover:shadow-md transition bg-white"
+                >
+                    <p className="text-lg font-medium capitalize">{site.name}</p>
+                </div>
+            ))}
+        </div>
+    </div>
+
+</>
     )
 }
