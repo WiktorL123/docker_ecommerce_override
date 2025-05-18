@@ -45,7 +45,7 @@ export default function LoginForm(){
            localStorage.setItem('token', token)
            localStorage.setItem('email', email)
            setSuccessMessage('Logged in successfully, redirecting...')
-           setTimeout(()=>navigate('/admin'), 3000)
+           setTimeout(()=>navigate('/admin'), 1000)
 
        }
        catch (error){

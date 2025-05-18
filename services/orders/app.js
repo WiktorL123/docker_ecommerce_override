@@ -88,13 +88,14 @@ app.delete('/:id', authMiddleware, async (req, res) => {
 
 
 app.put('/:id', authMiddleware, async (req, res) => {
-    const { product, quantity } = req.body;
+    const { product, quantity, userId } = req.body;
     const id = parseInt(req.params.id);
 
     try {
         const updates = {};
         if (product) updates.product = product;
         if (quantity) updates.quantity = quantity;
+        if (userId) updates.userId = userId;
 
         if (Object.keys(updates).length === 0) {
             return res.status(400).json({ message: "Nothing to update" });

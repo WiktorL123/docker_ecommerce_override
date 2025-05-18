@@ -21,6 +21,7 @@ export default function Users() {
             setUsers((prevState) => prevState.filter(user => user.id !== id));
 
 
+
         }catch(error){
             setError(error.message);
         }
@@ -42,6 +43,7 @@ export default function Users() {
 
                 const data = await resp.json();
                 setUsers(data);
+                localStorage.setItem("users", JSON.stringify(data));
             } catch (err) {
                 console.error('❌ Error:', err);
                 setError(err);
