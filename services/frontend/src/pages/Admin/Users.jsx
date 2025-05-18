@@ -6,6 +6,28 @@ export default function Users() {
     const [error, setError] = useState(null);
     const [users, setUsers] = useState([]);
 
+    const handleDelete = async (id) =>{
+        try {
+            const res = await fetch(`/api/users/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                }
+            })
+            if (!res.ok) {
+                const errData = await res.json(); // <== pobieramy message z API
+                throw new Error(errData.message || "Nie udało się usunąć użytkownika.");
+            }
+            setUsers((prevState) => prevState.filter(user => user.id !== id));
+
+
+        }catch(error){
+            setError(error.message);
+        }
+    }
+
+
+
     useEffect(() => {
         const fetchUsers = async () => {
             try {
@@ -47,7 +69,7 @@ export default function Users() {
                         >
                             <span className="text-gray-800">{user.email}</span>
                             <button
-                                onClick={() => {}}
+                                onClick={()=>handleDelete(user.id)}
                                 className="text-sm text-red-600 border border-red-500 px-3 py-1 rounded hover:bg-red-50 transition"
                             >
                                 Usuń
@@ -55,6 +77,7 @@ export default function Users() {
                         </div>
                     ))}
                 </div>
+                {error && <div className='text-red-500'>{error}</div>}
             </div>
         </div>
     );
